@@ -46,12 +46,46 @@ public class EmailService {
         }
     }
 
-    // ------------------- READY-MADE EMAIL ACTIONS -------------------
+    
 
     // 1) When user registers
-    public void sendRegistrationEmail(String to, String name) {
-        String subject = "Welcome to CRS System";
-        String msg = "Hello " + name + ",\n\nYour account has been successfully created.\n\nRegards,\nCRS System";
+     public void sendUserAccountCreated(
+            String to,
+            String username,
+            String role,
+            String defaultPassword
+    ) {
+        String subject = "Your CRS Account Has Been Created";
+
+        String msg = "Hello " + username + ",\n\n"
+                + "Your CRS system account has been successfully created.\n\n"
+                + "ROLE: " + role + "\n"
+                + "USERNAME: " + username + "\n"
+                + "DEFAULT PASSWORD: " + defaultPassword + "\n\n"
+                + "IMPORTANT:\n"
+                + "Please log in using the default password and\n"
+                + "CHANGE YOUR PASSWORD IMMEDIATELY after your first login.\n\n"
+                + "If you have any issues, contact the system administrator.\n\n"
+                + "Regards,\nCRS System";
+
+        sendEmail(to, subject, msg);
+    }
+    
+   public void sendUpdatedEmail(String to, String name, String updatedFields) {
+    String subject = "Your CRS Account Has Been Updated";
+
+    String msg = "Hello " + name + ",\n\n"
+            + "The following changes have been made to your CRS account:\n"
+            + updatedFields + "\n\n"
+            + "If you did not request these changes, please contact the administrator immediately.\n\n"
+            + "Regards,\nCRS System";
+
+    sendEmail(to, subject, msg);
+}
+
+    public void sendDeactivatedEmail(String to, String name) {
+        String subject = "Account removed";
+        String msg = "Hello " + name + ",\n\nYour account has been removed from the system.\n\nRegards,\nCRS System";
         sendEmail(to, subject, msg);
     }
 
@@ -62,18 +96,46 @@ public class EmailService {
         sendEmail(to, subject, msg);
     }
 
-    // 3) When course recovery plan is updated
-    public void sendCourseRecoveryUpdate(String to, String details) {
-        String subject = "Course Recovery Update";
-        String msg = "Your course recovery plan has been updated:\n\n" + details + "\n\nGood luck!";
-        sendEmail(to, subject, msg);
+    // 3) course recovery plan 
+       public void sendRecoveryPlanDetails(
+            String studentEmail,
+            String studentName,
+            String courseName,
+            String failedComponents,
+            String planDetails,
+            String deadlines
+    ) {
+        String subject = "Your Course Recovery Plan - " + courseName;
+
+        String msg = "Hello " + studentName + ",\n\n"
+                + "Here are your recovery details for: " + courseName + "\n\n"
+                + "FAILED COMPONENTS:\n" + failedComponents + "\n\n"
+                + "RECOVERY PLAN:\n" + planDetails + "\n\n"
+                + "DEADLINES:\n" + deadlines + "\n\n"
+                + "Please follow the plan to stay on track.\n\n"
+                + "Regards,\nCRS System";
+
+        sendEmail(studentEmail, subject, msg);
     }
 
     // 4) When academic report is ready
-    public void sendReportReadyEmail(String to) {
-        String subject = "Academic Report Ready";
-        String msg = "Your academic performance report is now ready.\nPlease check the CRS system.\n\n- CRS System";
-        sendEmail(to, subject, msg);
+   public void sendAcademicReport(
+            String studentEmail,
+            String studentName,
+            String semester,
+            String courseGrades,
+            double cgpa
+    ) {
+        String subject = "Your Academic Performance Report (" + semester + ")";
+
+        String msg = "Hello " + studentName + ",\n\n"
+                + "Here is your academic performance report for " + semester + ":\n\n"
+                + courseGrades + "\n"
+                + "CGPA: " + cgpa + "\n\n"
+                + "Regards,\nCRS System";
+
+        sendEmail(studentEmail, subject, msg);
     }
+   
  
 }
