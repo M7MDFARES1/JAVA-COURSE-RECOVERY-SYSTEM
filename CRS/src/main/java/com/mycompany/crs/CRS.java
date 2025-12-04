@@ -1,18 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.mycompany.crs;
 
-/**
- *
- * @author konda
- */
-public class CRS {
+import crs.users.UserManager;
+import crs.gui.LoginForm;
 
+public class CRS {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        UserManager manager = new UserManager();
+        manager.loadUsers();
+
+        LoginForm login = new LoginForm(manager);
+        login.setVisible(true);
     }
 }
-
-//ayre feek
