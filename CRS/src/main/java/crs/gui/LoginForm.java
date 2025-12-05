@@ -15,8 +15,8 @@ public class LoginForm extends javax.swing.JFrame {
     /**
      * Creates new form LoginForm
      */
-    public LoginForm() {
-        initComponents();
+    private LoginForm() {
+        throw new UnsupportedOperationException("Use LoginForm(manager) instead.");
     }
     // Custom constructor that receives UserManager
 crs.users.UserManager manager;
@@ -85,10 +85,6 @@ public LoginForm(crs.users.UserManager m) {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 145, Short.MAX_VALUE)
-                .addComponent(lblError)
-                .addGap(129, 129, 129))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -108,8 +104,10 @@ public LoginForm(crs.users.UserManager m) {
                                     .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(130, 130, 130)
-                        .addComponent(btnResetPassword)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblError)
+                            .addComponent(btnResetPassword))))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,7 +163,7 @@ switch (u.getRole().toLowerCase()) {
         break;
 
     case "officer":
-        new Officier().setVisible(true);
+        new Officier(manager).setVisible(true);
         this.dispose();
         break;
 
@@ -186,7 +184,9 @@ switch (u.getRole().toLowerCase()) {
     }//GEN-LAST:event_btnLogin1ActionPerformed
 
     private void btnResetPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetPasswordActionPerformed
-        new ResetPasswordForm().setVisible(true);
+        new ResetPasswordForm(manager).setVisible(true);
+        this.dispose();
+
     }//GEN-LAST:event_btnResetPasswordActionPerformed
 
 
