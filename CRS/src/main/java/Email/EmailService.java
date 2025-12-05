@@ -4,10 +4,8 @@ import java.util.Properties;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 
-
-
 public class EmailService {
- 
+
           // ------------------- CONFIG -------------------
     private static final String SENDER_EMAIL = "mohamedfares9561@gmail.com"; 
     private static final String APP_PASSWORD = "dmck qydq yhwh slhe";     
@@ -46,8 +44,6 @@ public class EmailService {
         }
     }
 
-    
-
     // 1) When user registers
      public void sendUserAccountCreated(
             String to,
@@ -70,7 +66,7 @@ public class EmailService {
 
         sendEmail(to, subject, msg);
     }
-    
+
    public void sendUpdatedEmail(String to, String name, String updatedFields) {
     String subject = "Your CRS Account Has Been Updated";
 
@@ -136,6 +132,5 @@ public class EmailService {
 
         sendEmail(studentEmail, subject, msg);
     }
-   
- 
+
 }
