@@ -66,4 +66,14 @@ public class UserManager {
 
         UserFileHandler.writeLines("users.txt", lines);
     }
+ // ========= change password (used by NewPasswordForm) =========
+public void updatePassword(String email, String newPassword) {
+    for (User u : users) {
+        if (u.email.equalsIgnoreCase(email)) {
+            u.password = newPassword;
+            saveUsers();
+            return;
+        }
+    }
+}
 }

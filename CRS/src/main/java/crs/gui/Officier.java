@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package crs.gui;
+import crs.users.UserManager;
+import javax.swing.JFrame;
 
 /**
  *
@@ -11,6 +13,12 @@ package crs.gui;
 public class Officier extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Officier.class.getName());
+    private UserManager manager;
+
+    public Officier(UserManager m) {
+        this.manager = m;
+        initComponents();
+    }
 
 
     public Officier() {
