@@ -4,7 +4,11 @@
  */
 package crs.gui;
 import crs.users.UserManager;
-import javax.swing.JOptionPane;
+import Email.EmailService;
+import javax.swing.*;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 /**
  *
  * @author skill_issue
@@ -13,22 +17,16 @@ public class NewPasswordForm extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NewPasswordForm.class.getName());
 
-    /**
-     * Creates new form NewPasswordForm
-     */
-    private UserManager manager;
-    private String email;
-
-    // Default constructor (NetBeans uses this)
-    private NewPasswordForm() {
-        throw new UnsupportedOperationException("Use NewPasswordForm(manager, email)");
-
-    }
-
-    // Custom constructor – called from OTPVerificationForm
-    public NewPasswordForm(UserManager m, String email) {
+   private UserManager manager;
+    private String userEmail;
+    private String userName;
+    private EmailService emailService = new EmailService();
+    
+    // Constructor - receives email and username from OTP form
+    public NewPasswordForm(UserManager m, String email, String name) {
         this.manager = m;
-        this.email = email;
+        this.userEmail = email;
+        this.userName = name;
         initComponents();
     }
 
@@ -124,32 +122,95 @@ public class NewPasswordForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO add your handling code here:
-        String pass1 = txtNewPassword.getText().trim();
-        String pass2 = txtConfirmPassword.getText().trim();
-
-        if (pass1.isEmpty() || pass2.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please fill both password fields.");
+      String newPassword = txtNewPassword.getText().trim();
+        String confirmPassword = txtConfirmPassword.getText().trim();
+        
+        if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        if (!pass1.equals(pass2)) {
-            JOptionPane.showMessageDialog(this, "Passwords do not match.");
+        
+        if (!newPassword.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+        
+        // Validate password strength (optional)
+        if (newPassword.length() < 6) {
+            JOptionPane.showMessageDialog(this, "Password must be at least 6 characters!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         // Update password in users.txt
-        manager.updatePassword(email, pass1);
-
-        JOptionPane.showMessageDialog(this, "Password updated successfully!");
-
-        new LoginForm(manager).setVisible(true);
-        this.dispose();
+        if (updatePasswordInFile(userEmail, newPassword)) {
+            // Get current timestamp
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            
+            // Send confirmation email
+            emailService.sendPasswordChangeConfirmation(userEmail, userName, timestamp);
+            
+            JOptionPane.showMessageDialog(this, "Password reset successful!\nConfirmation email sent to " + userEmail);
+            
+            // Go back to login
+            new LoginForm(manager).setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to update password!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnSaveActionPerformed
 
+        // Method to update password in users.txt
+    private boolean updatePasswordInFile(String email, String newPassword) {
+        File inputFile = new File("users.txt");
+        File tempFile = new File("users_temp.txt");
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+            
+            String line;
+            boolean updated = false;
+            
+            while ((line = reader.readLine()) != null) {
+                String[] userData = line.split(",");
+                
+                // Format: username,email,password,role,status
+                if (userData.length >= 5) {
+                    String storedEmail = userData[1].trim();
+                    
+                    if (storedEmail.equalsIgnoreCase(email)) {
+                        // Update the password (index 2)
+                        userData[2] = newPassword;
+                        updated = true;
+                    }
+                    
+                    // Write line back (updated or not)
+                    writer.write(String.join(",", userData));
+                    writer.newLine();
+                } else {
+                    // Write unchanged line
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+            
+            writer.close();
+            reader.close();
+            
+            // Replace original file with temp file
+            if (updated && inputFile.delete()) {
+                return tempFile.renameTo(inputFile);
+            }
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+    
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        new OTPVerificationForm(manager, email).setVisible(true);
+        new OTPVerificationForm(manager, userEmail, userName, "").setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnBackActionPerformed
 
