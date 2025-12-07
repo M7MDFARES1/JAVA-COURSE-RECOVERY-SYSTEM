@@ -5,7 +5,8 @@
 package crs.gui;
 import crs.users.UserManager;
 import javax.swing.JOptionPane;
-
+import Email.EmailService;
+import crs.gui.ResetPasswordForm;
 
 /**
  *
@@ -13,23 +14,24 @@ import javax.swing.JOptionPane;
  */
 public class OTPVerificationForm extends javax.swing.JFrame {
     private UserManager manager;
-    private String email;
+    private String userEmail;
+    private String userName;
     private String generatedOTP;
+    private EmailService emailService = new EmailService();
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(OTPVerificationForm.class.getName());
 
     /**
      * Creates new form OTPVerificationForm
      */
-    public OTPVerificationForm(UserManager m, String email) {
+   // Constructor that accepts the OTP and user info
+    public OTPVerificationForm(UserManager m, String email, String name, String otp) {
         this.manager = m;
-        this.email = email;
-
-        // simple static OTP (assignment doesn't require real email sending)
-        this.generatedOTP = "123456";
-
+        this.userEmail = email;
+        this.userName = name;
+        this.generatedOTP = otp;
         initComponents();
-        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -119,22 +121,24 @@ public class OTPVerificationForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtOTPActionPerformed
 
     private void btnVerifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerifyActionPerformed
-        // TODO add your handling code here:
-        String otp = txtOTP.getText().trim();
+        String enteredOTP = txtOTP.getText().trim();
 
-    if (otp.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please enter the OTP.");
+   if (enteredOTP.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter the OTP!", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
-
-    if (!otp.equals(generatedOTP)) {
-        JOptionPane.showMessageDialog(this, "Incorrect OTP, try again.");
-        return;
+    
+     // Verify OTP
+    if (enteredOTP.equals(generatedOTP)) {
+        JOptionPane.showMessageDialog(this, "OTP Verified Successfully!");
+        
+        // Navigate to password reset page - PASS EMAIL
+        new NewPasswordForm(manager, userEmail, userName).setVisible(true);
+        this.dispose();
+        
+    } else {
+        JOptionPane.showMessageDialog(this, "Invalid OTP! Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
     }
-
-    // OTP correct → go to new password page
-    new NewPasswordForm(manager, email).setVisible(true);
-    this.dispose();
     }//GEN-LAST:event_btnVerifyActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed

@@ -3,6 +3,8 @@ package Email;
 import java.util.Properties;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
+import java.util.Random;
+
 
 public class EmailService {
 
@@ -67,31 +69,63 @@ public class EmailService {
         sendEmail(to, subject, msg);
     }
 
-   public void sendUpdatedEmail(String to, String name, String updatedFields) {
+   public void sendUpdatedEmail(String to, String name, String password, String role) {
     String subject = "Your CRS Account Has Been Updated";
 
     String msg = "Hello " + name + ",\n\n"
-            + "The following changes have been made to your CRS account:\n"
-            + updatedFields + "\n\n"
+            + "Check your CRS account details changes have been made:\n"
+            + "Your Password: " + password + "\n\n"
+            + "Your Role: " + role + "\n\n"
             + "If you did not request these changes, please contact the administrator immediately.\n\n"
             + "Regards,\nCRS System";
 
     sendEmail(to, subject, msg);
 }
 
-    public void sendDeactivatedEmail(String to, String name) {
+    public void sendDeactivatedEmail(String to) {
         String subject = "Account removed";
-        String msg = "Hello " + name + ",\n\nYour account has been removed from the system.\n\nRegards,\nCRS System";
+        String msg = "Hello " + ",\n\nYour account has been removed from the system.\n\nRegards,\nCRS System";
         sendEmail(to, subject, msg);
     }
 
-    // 2) When user resets password
-    public void sendPasswordResetEmail(String to, String name) {
-        String subject = "CRS Password Reset";
-        String msg = "Hello " + name + ",\n\nYour password has been reset.\nIf this was not you, please contact support.\n\n- CRS System";
-        sendEmail(to, subject, msg);
-    }
+    /**
+ * Sends OTP to user's email for password reset verification
+ */
+    public void sendPasswordResetOTP(String to, String name, String otp) {
+        String subject = "CRS Password Reset - OTP Verification";
+        String messageText = "Dear " + name + ",\n\n" +
+            "You have requested to reset your password.\n\n" +
+            "Your OTP is: " + otp + "\n\n" +
+            "This OTP is valid for 10 minutes.\n" +
+            "If you didn't request this, please ignore this email.\n\n" +
+            "Best regards,\n" +
+            "CRS System";
+    
+         sendEmail(to, subject, messageText);
+}
 
+/**
+ * Sends confirmation email after successful password change
+ */
+    public void sendPasswordChangeConfirmation(String to, String name, String timestamp) {
+        String subject = "CRS Password Changed Successfully";
+        String messageText = "Dear " + name + ",\n\n" +
+                "Your password was successfully changed on " + timestamp + ".\n\n" +
+                "If you didn't make this change, please contact your administrator immediately.\n\n" +
+                "Best regards,\n" +
+                "CRS System";
+    
+    sendEmail(to, subject, messageText);
+}
+
+/**
+ * Generates a random 6-digit OTP
+ */
+    public String generateOTP() {
+        Random random = new Random();
+        int otp = 100000 + random.nextInt(900000); // generates 6-digit number
+        return String.valueOf(otp);
+}
     // 3) course recovery plan 
        public void sendRecoveryPlanDetails(
             String studentEmail,

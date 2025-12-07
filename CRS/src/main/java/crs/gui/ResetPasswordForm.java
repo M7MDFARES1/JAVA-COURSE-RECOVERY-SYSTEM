@@ -4,12 +4,12 @@
  */
 package crs.gui;
 import crs.users.UserManager;
+import Email.EmailService;
+import javax.swing.*;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-
-/**
- *
- * @author ASUS
- */
 public class ResetPasswordForm extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ResetPasswordForm.class.getName());
     
@@ -21,6 +21,11 @@ public class ResetPasswordForm extends javax.swing.JFrame {
     initComponents();
 }
 
+    private String generatedOTP = null;
+    private String userEmail = null;
+    private String userName = null;
+    private EmailService emailService = new EmailService();
+    
     public ResetPasswordForm(UserManager m) {
         this.manager = m;
         initComponents();
@@ -59,6 +64,8 @@ public class ResetPasswordForm extends javax.swing.JFrame {
                 btnBackActionPerformed(evt);
             }
         });
+
+        txtEmail.setName("emailGiven"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -100,25 +107,62 @@ public class ResetPasswordForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+     public boolean checkEmailExists(String email) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] userData = line.split(",");
+                
+                // Format: username,email,password,role,status
+                // Example: admin,admin@gmail.com,09876,admin,active
+                if (userData.length >= 2) {
+                    String storedEmail = userData[1].trim();
+                    
+                    if (storedEmail.equalsIgnoreCase(email)) {
+                        userName = userData[0].trim(); // Get username for email
+                        return true;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error reading user data!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
+    }
+     
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
-        // TODO add your handling code here:
-            String email = txtEmail.getText().trim();
+ String email = txtEmail.getText().trim();
 
     if (email.isEmpty()) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Please enter your email.");
+        JOptionPane.showMessageDialog(this, "Please enter your email.");
         return;
     }
-
-    // Move to OTP page, pass manager + email
-    new OTPVerificationForm(manager, email).setVisible(true);
-    this.dispose();
-
+    
+    // Check if email exists in users.txt
+    if (checkEmailExists(email)) {
+        userEmail = email;
+        JOptionPane.showMessageDialog(this, "Email found! Proceeding to OTP verification...");
+        
+        // Generate and send OTP
+        generatedOTP = emailService.generateOTP();
+        emailService.sendPasswordResetOTP(userEmail, userName, generatedOTP);
+        
+        JOptionPane.showMessageDialog(this, "OTP has been sent to your email!");
+        
+        // Navigate to OTP page - PASS ALL REQUIRED DATA
+        new OTPVerificationForm(manager, userEmail, userName, generatedOTP).setVisible(true);
+        this.dispose();
+        
+    } else {
+        JOptionPane.showMessageDialog(this, "Email not found in the system!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
         new LoginForm(manager).setVisible(true);
-    this.dispose();
+        this.dispose();
 
     }//GEN-LAST:event_btnBackActionPerformed
 

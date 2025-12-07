@@ -6,7 +6,7 @@ package crs.gui;
 import crs.users.User;
 import crs.users.UserManager;
 import javax.swing.table.DefaultTableModel;
-
+import Email.EmailService;
 
 /**
  *
@@ -265,9 +265,14 @@ private void loadTable() {
         javax.swing.JOptionPane.showMessageDialog(this, "Please fill all fields.");
         return;
     }
-
+    
+    // Send registration email
+    EmailService emailService = new EmailService();
+    emailService.sendUserAccountCreated(email,role, name, password);
+    
     User u = new User(name, email, password, role, status);
     manager.addUser(u);
+    
 
     loadTable();
     }//GEN-LAST:event_btnAddActionPerformed
@@ -289,6 +294,9 @@ private void loadTable() {
         return;
     }
 
+    EmailService emailService = new EmailService();
+    emailService.sendUpdatedEmail(email, name, password, role);
+    
     User updated = new User(name, email, password, role, status);
     manager.updateUser(updated);
 
@@ -298,12 +306,15 @@ private void loadTable() {
     private void btnDeactivateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeactivateActionPerformed
         // TODO add your handling code here:
             String email = txtEmail.getText().trim();
-
+            
     if (email.isEmpty()) {
         javax.swing.JOptionPane.showMessageDialog(this, "Select a user first.");
         return;
     }
-
+    
+    EmailService emailService = new EmailService();
+    emailService.sendDeactivatedEmail(email);
+    
     manager.deactivateUser(email);
     lblStatus.setText("deactivated");
 
