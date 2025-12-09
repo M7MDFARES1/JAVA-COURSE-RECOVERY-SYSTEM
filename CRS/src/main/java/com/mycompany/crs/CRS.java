@@ -1,15 +1,28 @@
 package com.mycompany.crs;
 
+import com.mycompany.crs.gui.EligibilityPage;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
-import crs.users.UserManager;
-import crs.gui.LoginForm;
-
+/**
+ * Main entry point for Course Recovery System
+ * 
+ * @author konda
+ */
 public class CRS {
+    
     public static void main(String[] args) {
-        UserManager manager = new UserManager();
-        manager.loadUsers();
-
-        LoginForm login = new LoginForm(manager);
-        login.setVisible(true);
+        // Set look and feel
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        // Launch the Eligibility Check page
+        SwingUtilities.invokeLater(() -> {
+            EligibilityPage page = new EligibilityPage();
+            page.setVisible(true);
+        });
     }
 }
