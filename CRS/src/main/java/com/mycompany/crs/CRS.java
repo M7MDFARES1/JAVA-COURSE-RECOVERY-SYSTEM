@@ -8,11 +8,10 @@ package com.mycompany.crs;
  *
  * @author konda
  */
-public class CRS {
 
+public class CRS {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        CourseRecoveryPlanUI ui = new CourseRecoveryPlanUI();
+        ui.setVisible(true);
     }
 }
-
-//ayre feek
