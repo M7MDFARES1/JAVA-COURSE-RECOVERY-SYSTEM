@@ -129,7 +129,7 @@ private void updateTableResults() {
         label1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         label1.setName(""); // NOI18N
         label1.setText("Select Student");
-        jPanel1.add(label1, new org.netbeans.lib.awtextra.AbsoluteConstraints(19, 81, -1, -1));
+        jPanel1.add(label1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
         label1.getAccessibleContext().setAccessibleDescription("");
         label1.getAccessibleContext().setAccessibleParent(label1);
 
