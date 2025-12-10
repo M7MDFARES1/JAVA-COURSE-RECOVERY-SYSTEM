@@ -31,20 +31,23 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnManageUsers = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("AGA Arabesque", 0, 18)); // NOI18N
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
         jLabel1.setText("Admin Dashboard");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 10, 520, 90));
 
         btnManageUsers.setText("Manage Users");
-        btnManageUsers.setActionCommand("Manage Users");
         btnManageUsers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnManageUsersActionPerformed(evt);
             }
         });
+        getContentPane().add(btnManageUsers, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 110, -1, -1));
 
         btnLogout.setText("Logout");
         btnLogout.addActionListener(new java.awt.event.ActionListener() {
@@ -52,33 +55,11 @@ public class AdminDashboard extends javax.swing.JFrame {
                 btnLogoutActionPerformed(evt);
             }
         });
+        getContentPane().add(btnLogout, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 110, 112, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(118, 118, 118))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(64, 64, 64)
-                .addComponent(btnManageUsers)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
-                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(87, 87, 87)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnManageUsers)
-                    .addComponent(btnLogout))
-                .addContainerGap(168, Short.MAX_VALUE))
-        );
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\ASUS\\OneDrive\\Documents\\NetBeansProjects\\JAVA-COURSE-RECOVERY-SYSTEM\\CRS\\resources\\images\\Dashboard.png")); // NOI18N
+        jLabel2.setToolTipText("");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 740, 450));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -110,5 +91,6 @@ public AdminDashboard(crs.users.UserManager m) {
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnManageUsers;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }
